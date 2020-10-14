@@ -102,7 +102,8 @@ class App extends React.Component {
         return (
             <div className="App">
                 <QueryConsole updateState={this.updateState.bind(this)}/>
-                <GraphCanvas query={this.state.query} containerId={"graphNetwork"} connector={connector}/>
+                <GraphCanvas query={this.state.query}
+                             containerId={"graphNetwork"} connector={connector}/>
             </div>
         )
     }

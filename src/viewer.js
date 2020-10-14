@@ -17,7 +17,7 @@ export default class GraphCanvas extends React.Component {
 
     componentDidMount() {
         console.log("this.connector", this.props.connector)
-        this.vizNetworkUtils = new VizNetworkUtils(null, this.container);
+        this.vizNetworkUtils = new VizNetworkUtils({}, this.container);
         // this.vizNetworkUtils.setIsLoaded(true);
 
     }
