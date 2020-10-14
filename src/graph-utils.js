@@ -8,7 +8,12 @@ export default class VizNetworkUtils {
     edge_groups = {};
 
     defaultEdgeConfig = {
-        smooth: false,
+        smooth: {
+            enabled: true,
+            forceDirection: true,
+            roundness: 0.5,
+            type: "curvedCW"
+        },
         physics: false,
         color: "#efefef",
         width: 0.75,
@@ -135,20 +140,12 @@ export default class VizNetworkUtils {
         return edgeData;
     }
 
-    prepareNodes(verticesData) {
-        let nodesPrepared = [];
-        verticesData.forEach((node) => {
-            nodesPrepared.push(this._prepareNode(node));
-        });
-        return nodesPrepared;
+    checkIfNodeExist(node) {
+        return this.network.findNode(node.id).length !== 0;
     }
 
-    prepareEdges(edgesData) {
-        let edgesPrepared = [];
-        edgesData.forEach((edge) => {
-            edgesPrepared.push(this._prepareEdge(edge));
-        });
-        return edgesPrepared;
+    checkIfEdgeExist(edge) {
+        return !!this.edges.get(edge.id);
     }
 
     updateNetwork(newOptions) {
@@ -157,13 +154,22 @@ export default class VizNetworkUtils {
     }
 
     updateData(nodes, edges) {
+
         if (nodes) {
-            const nodesPrepared = this.prepareNodes(nodes);
-            this.nodes.add(nodesPrepared);
+            nodes.forEach((node) => {
+                const nodePrepared = this._prepareNode(node);
+                if (!this.checkIfNodeExist(nodePrepared)) {
+                    this.nodes.add(nodePrepared);
+                }
+            });
         }
         if (edges) {
-            const edgesPrepared = this.prepareEdges(edges);
-            this.edges.add(edgesPrepared);
+            edges.forEach((edge) => {
+                const edgePrepared = this._prepareEdge(edge);
+                if (!this.checkIfEdgeExist(edgePrepared)) {
+                    this.edges.add(edgePrepared);
+                }
+            });
         }
     }
 
@@ -186,11 +192,11 @@ export default class VizNetworkUtils {
 
     // getTextColor() {}
     // getBgColor() {}
-    isLoaded = false;
-
-    setIsLoaded(status){
-        this.isLoaded = status;
-    }
+    // isLoaded = false;
+    //
+    // setIsLoaded(status){
+    //     this.isLoaded = status;
+    // }
 
     constructor(networkOptions, container) {
 

@@ -18,7 +18,7 @@ export default class GraphCanvas extends React.Component {
     componentDidMount() {
         console.log("this.connector", this.props.connector)
         this.vizNetworkUtils = new VizNetworkUtils(null, this.container);
-        this.vizNetworkUtils.setIsLoaded(true);
+        // this.vizNetworkUtils.setIsLoaded(true);
 
     }
 
@@ -27,20 +27,22 @@ export default class GraphCanvas extends React.Component {
         if (this.props.query !== prevProps.query) {
             if (this.props.query === "query1") {
                 this.vizNetworkUtils.updateData(
-                    this.props.connector.query().nodes, this.props.connector.query().edges)
+                    this.props.connector.query().nodes,
+                    this.props.connector.query().edges
+                );
             } else if (this.props.query === "query2") {
-                this.vizNetworkUtils.updateData(this.props.connector.query2())
+                this.vizNetworkUtils.updateData(this.props.connector.query2());
             } else if (this.props.query === "query3") {
-                this.vizNetworkUtils.updateData(this.props.connector.query3())
+                this.vizNetworkUtils.updateData(this.props.connector.query3());
             } else if (this.props.query === "query1") {
                 alert("already updated");
             }
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return !this.vizNetworkUtils.isLoaded;
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return !this.vizNetworkUtils.isLoaded;
+    // }
 
 
     render() {
