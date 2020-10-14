@@ -1,4 +1,6 @@
-// import {DataSet} from "vis-data/peer/esm/vis-data"
+import defaultsDeep from "lodash/fp/defaultsDeep";
+import {DataSet} from "vis-data/peer/esm/vis-data"
+import {Network} from "vis-network/peer/esm/vis-network";
 
 
 export default class VizNetworkUtils {
@@ -30,6 +32,42 @@ export default class VizNetworkUtils {
             // bold: true
         }
     }
+
+    getDefaultOptions() {
+        return {
+            autoResize: true,
+            layout: {
+                hierarchical: false
+            },
+            physics: {
+                stabilization: false,
+                enabled: true
+            },
+            edges: this.generateEdgeConfig(),
+            nodes: {
+                shape: "circle",
+                size: 14
+            },
+            groups: this.node_groups,
+            height: "calc(100vh - 100px)"
+        };
+    }
+
+
+    initNetwork(networkOptions, container) {
+        // merge user provided options with our default ones
+        let options = defaultsDeep(this.getDefaultOptions(), networkOptions);
+        const {current} = container;
+        this.network = new Network(
+            current,
+            {
+                edges: this.edges,
+                nodes: this.nodes
+            },
+            options
+        );
+    }
+
 
     // getColorBasedOnText(groupName) {
     //     return;
@@ -113,24 +151,52 @@ export default class VizNetworkUtils {
         return edgesPrepared;
     }
 
-
-    center(network, nodes) {
-        const fitOption = {
-            nodes: nodes.getIds() //nodes is type of vis.DataSet contains all the nodes
-        }
-        network.fit(fitOption);
-
-        const centerOptions = {
-            position: {
-                x: this.network.getViewPosition().x,
-                y: this.network.getViewPosition().y
-            },
-        }
-        network.moveTo(centerOptions);
-
+    updateNetwork(newOptions) {
+        // const existingOptions =
+        this.network.setOptions(newOptions)
     }
+
+    updateData(nodes, edges) {
+        if (nodes) {
+            const nodesPrepared = this.prepareNodes(nodes);
+            this.nodes.add(nodesPrepared);
+        }
+        if (edges) {
+            const edgesPrepared = this.prepareEdges(edges);
+            this.edges.add(edgesPrepared);
+        }
+    }
+
+
+    // centerCanvas(network, nodes) {
+    //     const fitOption = {
+    //         nodes: nodes.getIds() //nodes is type of vis.DataSet contains all the nodes
+    //     }
+    //     network.fit(fitOption);
+    //
+    //     const centerOptions = {
+    //         position: {
+    //             x: this.network.getViewPosition().x,
+    //             y: this.network.getViewPosition().y
+    //         },
+    //     }
+    //     network.moveTo(centerOptions);
+    //
+    // }
 
     // getTextColor() {}
     // getBgColor() {}
-    // constructor(labelName, nodeShape) {}
+    isLoaded = false;
+
+    setIsLoaded(status){
+        this.isLoaded = status;
+    }
+
+    constructor(networkOptions, container) {
+
+        this.edges = new DataSet([]);
+        this.nodes = new DataSet([]);
+        this.initNetwork(networkOptions, container);
+        // this.isLoaded = true;
+    }
 }
