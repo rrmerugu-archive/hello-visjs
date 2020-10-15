@@ -4,6 +4,7 @@ import {Network} from "vis-network/peer/esm/vis-network";
 
 const ColorHash = require('color-hash');
 
+
 let colorHash = new ColorHash({hue: [{min: 90, max: 230}, {min: 90, max: 230}, {min: 90, max: 230}]});
 
 function getColorForString(label) {
@@ -156,11 +157,19 @@ export default class VizNetworkUtils {
         return value.toString();
     }
 
+    getLabelFromKey(vertexData, labelPropertyKey) {
+        let label = labelPropertyKey
+            ? this.stringify(vertexData.properties[labelPropertyKey])
+            : this.stringify(vertexData.id);
+        if (!label) {
+            label = vertexData.id;
+        }
+        return label;
+    }
+
     _prepareNode(vertexData, labelPropertyKey) {
         const groupName = vertexData.label;
-        vertexData.label = labelPropertyKey
-            ? this.stringify(vertexData[labelPropertyKey])
-            : this.stringify(vertexData.id);
+        vertexData.label = this.getLabelFromKey(vertexData, labelPropertyKey);
         vertexData.group = groupName;
         vertexData.color = this.getNodeColor(groupName);
         // this.generateNodeGroups(groupName);
@@ -170,7 +179,7 @@ export default class VizNetworkUtils {
     _prepareEdge(edgeData, labelPropertyKey) {
         const groupName = edgeData.label;
         edgeData.label = labelPropertyKey
-            ? this.stringify(edgeData[labelPropertyKey])
+            ? this.stringify(edgeData.properties[labelPropertyKey])
             : this.stringify(edgeData.id);
         edgeData.group = groupName;
         // this.generatorEdgeGroups(groupName);
