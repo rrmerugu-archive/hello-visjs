@@ -1,5 +1,33 @@
 .App {
-  text-align: center;
-  background-color: #242424;
+    /*text-align: center;*/
 }
 
+.graph-canvas {
+    background-color: #242424;
+
+}
+
+#NodeMenu {
+    width: 120px;
+    padding: 0;
+    margin: 0;
+
+
+}
+
+#NodeMenu ul {
+    background-color: #3d3d3d;
+
+    padding-left: 0;
+    margin-left: 0;
+    border: 1px solid #efefef;
+
+}
+
+#NodeMenu ul li {
+    display: block;
+    border-bottom: 1px solid #efefef;
+    color: #efefef;
+    padding: 3px 5px;
+    font-size: 14px;
+}

@@ -37,7 +37,13 @@ import GraphCanvas from "./viewer";
 // }
 //
 // export default App;
-
+function range(start, stop, step) {
+    var a = [start], b = start;
+    while (b < stop) {
+        a.push(b += step || 1);
+    }
+    return a;
+}
 
 class GremlinConnector {
 
@@ -60,11 +66,37 @@ class GremlinConnector {
     }
 
     query2() {
-        return [{id: 8, label: "Node 8", title: "node 8 tootip text"}]
+        const nodes = [
+            {id: 6, label: "Node 6", properties: {title: "node 6 tootip text"}},
+            {id: 7, label: "Node 7", properties: {title: "node 7 tootip text"}},
+            {id: 8, label: "Node 8", properties: {title: "node 8 tootip text"}}
+        ];
+        const edges = [];
+        nodes.forEach((node) => {
+            edges.push(
+                {id: node.id + "-1", from: node.id, to: 1, label: "has_connection", properties: {"title": "connection"}}
+            )
+            edges.push(
+                {id: node.id + "-2", from: node.id, to: 2, label: "has_connection", properties: {"title": "connection"}}
+            )
+        })
+        return {nodes, edges};
     }
 
     query3() {
-        return [{id: 9, label: "Node 9", title: "node 8 tootip text"}]
+        const nodeRange = range(9, 30);
+        const nodes = [];
+        nodeRange.forEach((nodeId) => {
+            nodes.push({id: nodeId, label: "Node " + nodeId, properties: {title: "node " + nodeId + " tootip text"}})
+        })
+
+        const edges = [];
+        nodeRange.forEach((nodeId) => {
+            edges.push(
+                {id: nodeId + "-8", from: nodeId, to: 8, label: "has_connection", properties: {"title": "connection"}}
+            )
+        })
+        return {nodes, edges};
     }
 
 }
@@ -98,12 +130,15 @@ class App extends React.Component {
         this.setState(data);
     }
 
+
     render() {
         return (
             <div className="App">
                 <QueryConsole updateState={this.updateState.bind(this)}/>
                 <GraphCanvas query={this.state.query}
                              containerId={"graphNetwork"} connector={connector}/>
+                {/*<NodeMenu/>*/}
+                <div id="eventSpan"></div>
             </div>
         )
     }
